@@ -1,0 +1,35 @@
+Coursera Machine Learning Project
+========================================================
+
+This is my course project.
+
+```{r}
+library(caret)
+
+rm(list = ls())
+
+fitbit <- read.csv("C:/Users/James/Google Drive/Courserea/MachineLearning/Project/pml-training.csv", header=T)
+```
+
+I decided to drop variables that seemed extraneous and any predictive power would just be actually be random noise.
+```{r}
+#----drop what don't seem to be possible to be predictors.
+vartodrop <- c("X", "user_name", "raw_timestamp_part_1", "raw_timestamp_part_2", "cvtd_timestamp", "new_window", "num_windown")
+fitbit <- fitbit[, !names(fitbit) %in% vartodrop] 
+```
+
+Here I set the seed and went with a random forest model.
+```{r}
+set.seed(1771)
+
+
+inTrain <- createDataPartition(y=fitbit$classe, p=.7, list=F)
+
+training <- fitbit[inTrain,]
+testing <- fitbit[-inTrain,]
+
+modFit <- train(classe ~., data=training, method="rf", prox=T)
+
+modFit
+```
+
